@@ -17,4 +17,4 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 
 | Ferramenta/Biblioteca | Versão | Descrição | Link |
 | --------------------- | ------ | --------- | ---- |
-| [uv](https://img.shields.io/badge/uv-0.1.0-blue) |
+| ![version](https://img.shields.io/badge/uv-0.1.0-blue) |
