@@ -17,5 +17,5 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 
 | Ferramenta/Biblioteca | Versão | Descrição | Link |
 | --------------------- | ------ | --------- | ---- |
-| uv | ![version](https://img.shields.io/badge/0.1.0-blue) | Gerenciador de ambientes virtuais ultra-rápido | ![GitHub](https://github.com/astral-sh/uv) |
-| Python | ![version](https://img.shields.io/badge/0.1.0-blue) |  |  |
+| uv | ![version](https://img.shields.io/badge/0.1.0-blue) | Gerenciador de ambientes virtuais ultra-rápido | [GitHub](https://github.com/astral-sh/uv) |
+| Python | ![version](https://img.shields.io/badge/0.1.0-blue) | Linguagem de programação principal | [python.org](...) |
