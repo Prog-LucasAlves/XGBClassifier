@@ -7,8 +7,14 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 ## ✨ Funcionalidades
 
 - Preparação dos Dados Automatizada
-    1. Download automático de dados históricos do Yahoo Finace
-    2. Cálculo(Criação) de variáveis
-    3. Separção temporal dos dados(Treino, Teste, Validação)
+    1. Download automático de dados históricos do Yahoo Finace.
+    2. Cálculo(Criação) de variáveis.
+    3. Separção temporal dos dados(Treino, Teste, Validação).
 - Separação de **Features**:
-    1.
+    1. A
+
+## 📦 Dependências
+
+| Ferramenta/Biblioteca | Versão | Descrição | Link |
+| --------------------- | ------ | --------- | ---- |
+| [uv](https://img.shields.io/badge/uv-0.1.0-blue) |
