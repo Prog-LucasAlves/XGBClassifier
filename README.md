@@ -1,1 +1,3 @@
-Projeto: Previsão de retorno(10 dias) para o ativo 'PETR4'.
+# Modelo de Previsão de Ações com XGBoost e Análise SHAP
+
+## - 📌 Visão Geral
