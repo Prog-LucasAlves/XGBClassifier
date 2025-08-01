@@ -19,6 +19,7 @@ from sklearn.metrics import (
     f1_score,
     precision_score,
     recall_score,
+    pr,
 )
 from sklearn.model_selection import RandomizedSearchCV, cross_val_score
 from sklearn.tree import DecisionTreeClassifier
@@ -85,9 +86,6 @@ def preparar_dados(df):
     for col in ["volatility", "close_vs_high", "close_vs_low"]:
         for i in range(1, 21):
             df[f"{col}_lag{i}"] = df[col].shift(i)
-
-    for mm in range(20, 400, 30):
-        df[f"MM{mm}"] = df["Close"].rolling(mm).mean()
 
     columns = df.columns.tolist()
     df.dropna(subset=columns, inplace=True)
@@ -190,13 +188,13 @@ def modelo_top_features(df_treino):
     param_grid = {
         "n_estimators": randint(100, 500),
         "max_depth": randint(3, 5),
-        # "learning_rate": uniform(0.01, 0.05),
-        # "subsample": uniform(0.8, 0.2),
-        # "colsample_bytree": uniform(0.8, 0.2),
-        # "gamma": uniform(0, 0.5),
-        # "min_child_weight": randint(1, 3),
-        # "reg_alpha": uniform(1, 1.5),
-        # "reg_lambda": uniform(1, 1.5),
+        "learning_rate": uniform(0.01, 0.05),
+        "subsample": uniform(0.8, 0.2),
+        "colsample_bytree": uniform(0.8, 0.2),
+        "gamma": uniform(0, 0.5),
+        "min_child_weight": randint(1, 3),
+        "reg_alpha": uniform(1, 1.5),
+        "reg_lambda": uniform(1, 1.5),
     }
 
     grid_search = RandomizedSearchCV(
@@ -271,7 +269,7 @@ def tunar_modelo(X_train, y_train):
     def objective(trial):
 
         xgb_params = {
-            "eta": trial.suggest_float("xgb_eta", 0.01, 0.02),
+            "eta": trial.suggest_float("xgb_eta", 0.01, 0.01),
             "n_estimators": trial.suggest_int("xgb_n_estimators", 100, 300),
             "max_depth": trial.suggest_int("xgb_max_depth", 3, 5),
             "learning_rate": trial.suggest_float("xgb_learning_rate", 0.01, 0.05),
@@ -281,9 +279,13 @@ def tunar_modelo(X_train, y_train):
             "min_child_weight": trial.suggest_int("xgb_min_child_weight", 1, 3),
             "reg_alpha": trial.suggest_float("xgb_reg_alpha", 1, 1.5),
             "reg_lambda": trial.suggest_float("xgb_reg_lambda", 1, 1.5),
+            "scale_pos_weight": trial.suggest_float("scale_pos_weight", 0.5, 2.0),
         }
 
-        dt_params = {"criterion": trial.suggest_categorical("dt_criterion", ["gini"])}
+        dt_params = {
+            "criterion": trial.suggest_categorical("dt_criterion", ["gini", "entropy"]),
+            "max_depth": trial.suggest_int("dt_max_depth", 3, 5),
+        }
 
         meta_params = {
             "C": trial.suggest_float("meta_C", 0.1, 10, log=True),
@@ -312,21 +314,21 @@ def tunar_modelo(X_train, y_train):
         model = StackingClassifier(
             estimators=base_models,
             final_estimator=meta_model,
-            cv=10,
+            cv=5,
             stack_method="auto",
             n_jobs=1,
             verbose=0,
             passthrough=True,
         )
 
-        score = cross_val_score(model, X, y, cv=10, scoring="accuracy", n_jobs=1).mean()
+        score = cross_val_score(model, X, y, cv=5, scoring="accuracy", n_jobs=1).mean()
         return score
 
     sampler = optuna.samplers.TPESampler(seed=42)
     study = optuna.create_study(direction="maximize", sampler=sampler)
     study.optimize(objective, n_trials=30, show_progress_bar=True)
 
-    print("\n 🔍 Melhores hiperparâmetros encontrados:")
+    print("\n🔍 Melhores hiperparâmetros encontrados:")
     print(study.best_params)
 
     best_params = study.best_params
@@ -345,6 +347,7 @@ def tunar_modelo(X_train, y_train):
                 min_child_weight=best_params["xgb_min_child_weight"],
                 reg_alpha=best_params["xgb_reg_alpha"],
                 reg_lambda=best_params["xgb_reg_lambda"],
+                scale_pos_weight=best_params["scale_pos_weight"],
                 eval_metric=["logloss", "aucpr"],
                 objective="binary:logistic",
                 tree_method="hist",
@@ -355,7 +358,10 @@ def tunar_modelo(X_train, y_train):
         (
             "dt",
             DecisionTreeClassifier(
-                criterion=best_params["dt_criterion"], random_state=42
+                criterion=best_params["dt_criterion"],
+                max_depth=best_params["dt_max_depth"],
+                class_weight="balanced",
+                random_state=42,
             ),
         ),
     ]
@@ -363,6 +369,7 @@ def tunar_modelo(X_train, y_train):
     metal_model = LogisticRegression(
         C=best_params["meta_C"],
         solver=best_params["meta_solver"],
+        class_weight="balanced",
         max_iter=1000,
         n_jobs=1,
         random_state=42,
@@ -371,7 +378,7 @@ def tunar_modelo(X_train, y_train):
     final_model = StackingClassifier(
         estimators=base_models,
         final_estimator=metal_model,
-        cv=10,
+        cv=5,
         stack_method="auto",
         n_jobs=1,
         verbose=0,
@@ -380,8 +387,7 @@ def tunar_modelo(X_train, y_train):
 
     final_model.fit(X, y)
 
-    print("\n 🔍 Avaliando modelo final...")
-    print(f"📊 Acurácia: {final_model.  score(X, y):.2%}")
+    print("\n🔍 Avaliando modelo final...")
 
     return final_model
 

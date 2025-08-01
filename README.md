@@ -24,14 +24,14 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 
 ## 📦 Dependências
 
-| Biblioteca | Versão | Descrição | Link |
+| Biblioteca Versão | Descrição | Link |
 | --------------------- | ------ | --------- | ---- |
-| uv | ![version](https://img.shields.io/badge/0.1.0-blue) | Gerenciador de ambientes virtuais ultra-rápido | [GitHub](https://github.com/astral-sh/uv) |
-| Python | ![version](https://img.shields.io/badge/3.12.4-red) | Linguagem de programação principal | [python.org](https://www.python.org/) |
-| yfinance | ![version](https://img.shields.io/badge/0.2.64-green) | API para dados do Yahoo Finance | [GitHub](https://github.com/ranaroussi/yfinance) |
-| xgboost | ![version](https://img.shields.io/badge/3.0.2-yellon) | Framework de machine learning | [xgboost](https://xgboost.readthedocs.io/en/stable/#) |
-| shap | ![version](https://img.shields.io/badge/0.48.0-orange) | Análise de importância de features | [GitHub](https://github.com/shap/shap) |
-| optuna | ![version](https://img.shields.io/badge/Optuna-3.4.0-blueviolet) | Otimização de hiperparâmetros | [GitHub](https://github.com/optuna/optuna) |
+| ![version](https://img.shields.io/badge/uv-0.1.0-blueviolet) | Gerenciador de ambientes virtuais ultra-rápido | [GitHub](https://github.com/astral-sh/uv) |
+| ![version](https://img.shields.io/badge/Python-3.12.4-blueviolet) | Linguagem de programação principal | [python.org](https://www.python.org/) |
+| ![version](https://img.shields.io/badge/yfinance-0.2.64-blueviolet) | API para dados do Yahoo Finance | [GitHub](https://github.com/ranaroussi/yfinance) |
+| ![version](https://img.shields.io/badge/xgboost-3.0.2-blueviolet) | Framework de machine learning | [xgboost](https://xgboost.readthedocs.io/en/stable/#) |
+| ![version](https://img.shields.io/badge/shap-0.48.0-blueviolet) | Análise de importância de features | [GitHub](https://github.com/shap/shap) |
+| ![version](https://img.shields.io/badge/Optuna-3.4.0-blueviolet) | Otimização de hiperparâmetros | [GitHub](https://github.com/optuna/optuna) |
 
 ## 🚀 Como Usar
 
@@ -42,7 +42,17 @@ git clone https://github.com/Prog-LucasAlves/XGBClassifier.git
 cd XGBClassifier
 ```
 
-2. Instale as dependências:
+2. Crie e ative o ambiente virtual:
+
+``` bash
+uv venv .venv
+source .venv/bin/activate # Linux/macOs
+.venv\Scripts/activate # Windows
+```
+> [!NOTE]
+> Nesse passo e necessario ter instalado o ***uv***.
+
+3. Instale as dependências:
 
 ``` bash
 uv pip install pyproject.toml
@@ -76,15 +86,28 @@ uv pip install pyproject.toml
 |   └──
 |
 ├── .gitignore                     # Arquivos ignorados pelo git
-├── .python-version # Versão do python no projeto
-├── pyproject.toml # Dependências do projeto (uv)
-├── README.md # Documentação
-├──
-|
+├── .python-version                # Versão do python no projeto
+├── pyproject.toml                 # Dependências do projeto (uv)
+├── README.md                      # Documentação
 ```
 
 ## ⚙️ Configuração
 
+- O script está configurado para analisar ações da PETR4.SA (Petrobras), mas pode ser facilmente adaptado:
+
+``` python
+# No arquivo treinar_modelo_v1, linha 480 altere:
+ticker = "PETR4.SA"  # Para outro ticker do Yahoo Finance
+```
+
 ## 📊 Métricas de Performance
 
 ## 🤝 Contribuição
+
+- Contribuições são bem-vindas! Siga os passos:
+
+1. Faça um fork do projeto
+2. Crie sua branch (git checkout -b feature/nova-feature)
+3. Commit suas mudanças (git commit -m 'Adiciona nova feature')
+4. Push para a branch (git push origin feature/nova-feature)
+5. Abra um Pull Request
