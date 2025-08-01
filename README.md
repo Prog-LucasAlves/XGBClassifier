@@ -52,12 +52,14 @@ uv pip install pyproject.toml
 
 ## 🏗️ Estrutura do Projeto
 
+``` text
 📦 XGBClassifier
 ├── 📂 data/
     ├── 📂 image/                     # **Imagens e gráficos gerados**
             └── shap_importance.png  # Gráfico de importância de features
     ├── 📂 processed/                 # **Dados processados**
     ├── 📂 raw/                       # **Dados brutos e dados de treino, teste e validação**.
+```
 
 ## ⚙️ Configuração
 
