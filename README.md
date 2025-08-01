@@ -61,7 +61,7 @@ uv pip install pyproject.toml
 |    ├── processed/                # **Dados processados**
 |    |   └── top_features.txt      # Lista das melhores features
 |    |
-|    └── raw/                      # **Dados brutos e dados de treino, teste e validação**.
+|    └── raw/                      # **Dados**
 |        ├── dados_brutos.csv      # Dados baixados do Yahoo Finance
 |        ├── treino.csv            # Conjunto de treino
 |        ├── teste.csv             # Conjunto de teste
@@ -69,14 +69,17 @@ uv pip install pyproject.toml
 |
 ├── models/                        # **Modelo treinado**
 |
+├── scripts/                       # **Scripts do projeto**
+|   ├── baktesting.py              # Script para backtesting
+|   ├──
+|   ├──
+|   └──
 |
-|
-|
-|
-|
-|
-|
-|
+├── .gitignore                     # Arquivos ignorados pelo git
+├── .python-version # Versão do python no projeto
+├── pyproject.toml # Dependências do projeto (uv)
+├── README.md # Documentação
+├──
 |
 ```
 
