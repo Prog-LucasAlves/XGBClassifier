@@ -21,11 +21,20 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 
 ## 📦 Dependências
 
-| Ferramenta/Biblioteca | Versão | Descrição | Link |
+| Biblioteca | Versão | Descrição | Link |
 | --------------------- | ------ | --------- | ---- |
 | uv | ![version](https://img.shields.io/badge/0.1.0-blue) | Gerenciador de ambientes virtuais ultra-rápido | [GitHub](https://github.com/astral-sh/uv) |
 | Python | ![version](https://img.shields.io/badge/3.12.4-red) | Linguagem de programação principal | [python.org](https://www.python.org/) |
 | yfinance | ![version](https://img.shields.io/badge/0.2.64-green) | API para dados do Yahoo Finance | [GitHub](https://github.com/ranaroussi/yfinance) |
 | xgboost | ![version](https://img.shields.io/badge/3.0.2-yellon) | Framework de machine learning | [xgboost](https://xgboost.readthedocs.io/en/stable/#) |
 | shap | ![version](https://img.shields.io/badge/0.48.0-orange) | Análise de importância de features | [GitHub](https://github.com/shap/shap) |
-| optuna | |[version](ttps://img.shields.io/badge/Optuna-3.4.0-blueviolet) | Otimização de hiperparâmetros | [GitHub](https://github.com/optuna/optuna) |
+| optuna | ![version](https://img.shields.io/badge/Optuna-3.4.0-blueviolet) | Otimização de hiperparâmetros | [GitHub](https://github.com/optuna/optuna) |
+
+## 🚀 Como Usar
+
+1. Clone o repositório:
+
+´´bash
+git clone https://github.com/Prog-LucasAlves/XGBClassifier.git
+cd [nome_do repositorio]
+´´
