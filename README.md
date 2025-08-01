@@ -25,7 +25,7 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 ## 📦 Dependências
 
 | Biblioteca Versão | Descrição | Link |
-| --------------------- | ------ | --------- | ---- |
+| --------------------- | --------- | ---- |
 | ![version](https://img.shields.io/badge/uv-0.1.0-blueviolet) | Gerenciador de ambientes virtuais ultra-rápido | [GitHub](https://github.com/astral-sh/uv) |
 | ![version](https://img.shields.io/badge/Python-3.12.4-blueviolet) | Linguagem de programação principal | [python.org](https://www.python.org/) |
 | ![version](https://img.shields.io/badge/yfinance-0.2.64-blueviolet) | API para dados do Yahoo Finance | [GitHub](https://github.com/ranaroussi/yfinance) |
