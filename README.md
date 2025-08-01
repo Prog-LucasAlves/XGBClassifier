@@ -54,11 +54,30 @@ uv pip install pyproject.toml
 
 ``` text
 📦 XGBClassifier
-├── 📂 data/
-    ├── 📂 image/                     # **Imagens e gráficos gerados**
-            └── shap_importance.png  # Gráfico de importância de features
-    ├── 📂 processed/                 # **Dados processados**
-    ├── 📂 raw/                       # **Dados brutos e dados de treino, teste e validação**.
+├── data/
+|    ├── image/                    # **Imagens e gráficos gerados**
+|    |   └── shap_importance.png   # Gráfico de importância de features
+|    |
+|    ├── processed/                # **Dados processados**
+|    |   └── top_features.txt      # Lista das melhores features
+|    |
+|    └── raw/                      # **Dados brutos e dados de treino, teste e validação**.
+|        ├── dados_brutos.csv      # Dados baixados do Yahoo Finance
+|        ├── treino.csv            # Conjunto de treino
+|        ├── teste.csv             # Conjunto de teste
+|        └── validacao.csv         # Conjunto de validação
+|
+├── models/                        # **Modelo treinado**
+|
+|
+|
+|
+|
+|
+|
+|
+|
+|
 ```
 
 ## ⚙️ Configuração
