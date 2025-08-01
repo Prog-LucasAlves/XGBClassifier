@@ -11,7 +11,13 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
     2. Cálculo(Criação) de variáveis.
     3. Separção temporal dos dados(Treino, Teste, Validação).
 - Separação de **Features**:
-    1. A
+    1. Método **SHAP** para identificar as variáveis mais importantes.
+    2. Geração automática de ranking de features.
+    3. Visualização gráfica das features mais relevantes.
+- Modelagem Preditiva:
+    1. **Stacking Classifier** combinando XGBoost e Decision Trees.
+    2. Otimização de hiperparâmetros com Optuna.
+
 
 ## 📦 Dependências
 
@@ -19,3 +25,7 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 | --------------------- | ------ | --------- | ---- |
 | uv | ![version](https://img.shields.io/badge/0.1.0-blue) | Gerenciador de ambientes virtuais ultra-rápido | [GitHub](https://github.com/astral-sh/uv) |
 | Python | ![version](https://img.shields.io/badge/3.12.4-red) | Linguagem de programação principal | [python.org](https://www.python.org/) |
+| yfinance | ![version](https://img.shields.io/badge/0.2.64-green) | API para dados do Yahoo Finance | [GitHub](https://github.com/ranaroussi/yfinance) |
+| xgboost | ![version](https://img.shields.io/badge/3.0.2-yellon) | Framework de machine learning | [xgboost](https://xgboost.readthedocs.io/en/stable/#) |
+| shap | ![version](https://img.shields.io/badge/0.48.0-orange) | Análise de importância de features | [GitHub](https://github.com/shap/shap) |
+| optuna | |[version](ttps://img.shields.io/badge/Optuna-3.4.0-blueviolet) | Otimização de hiperparâmetros | [GitHub](https://github.com/optuna/optuna) |
