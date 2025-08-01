@@ -17,7 +17,10 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 - Modelagem Preditiva:
     1. **Stacking Classifier** combinando XGBoost e Decision Trees.
     2. Otimização de hiperparâmetros com Optuna.
-
+- Avaliação e Análise:
+    1. Métricas (acurácia, precisão).
+    2. Matriz de confusão.
+    3. Identificação de falsos/verdadeiros positivos.
 
 ## 📦 Dependências
 
@@ -44,5 +47,20 @@ cd XGBClassifier
 ``` bash
 uv pip install pyproject.toml
 ```
-> [NOTE]
-> Nesse passo e necessario ter instalado o uv
+> [!NOTE]
+> Nesse passo e necessario ter instalado o ***uv***.
+
+## 🏗️ Estrutura do Projeto
+
+📦 XGBClassifier
+├── 📂 data/
+    ├── 📂 image/                     # **Imagens e gráficos gerados**
+            └── shap_importance.png  # Gráfico de importância de features
+    ├── 📂 processed/                 # **Dados processados**
+    ├── 📂 raw/                       # **Dados brutos e dados de treino, teste e validação**.
+
+## ⚙️ Configuração
+
+## 📊 Métricas de Performance
+
+## 🤝 Contribuição
