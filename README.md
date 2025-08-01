@@ -34,7 +34,15 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 
 1. Clone o repositório:
 
-´´´bash
+``` bash
 git clone https://github.com/Prog-LucasAlves/XGBClassifier.git
 cd XGBClassifier
-´´´
+```
+
+2. Instale as dependências:
+
+``` bash
+uv pip install pyproject.toml
+```
+> [NOTE]
+> Nesse passo e necessario ter instalado o uv
