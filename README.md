@@ -32,6 +32,7 @@ Este projeto implementa um pipeline de machine learning para previsão do mercad
 | ![version](https://img.shields.io/badge/xgboost-3.0.2-blueviolet) | Framework de machine learning | [xgboost](https://xgboost.readthedocs.io/en/stable/#) |
 | ![version](https://img.shields.io/badge/shap-0.48.0-blueviolet) | Análise de importância de features | [GitHub](https://github.com/shap/shap) |
 | ![version](https://img.shields.io/badge/Optuna-3.4.0-blueviolet) | Otimização de hiperparâmetros | [GitHub](https://github.com/optuna/optuna) |
+| ![version](https://img.shields.io/badge/ta-0.11.0-blueviolet) | Indicadores técnicos | [GitHub](https://github.com/bukosabino/ta) |
 
 ## 🚀 Como Usar
 
@@ -65,30 +66,30 @@ uv pip install pyproject.toml
 ``` text
 📦 XGBClassifier
 ├── data/
-|    ├── image/                    # **Imagens e gráficos gerados**
-|    |   └── shap_importance.png   # Gráfico de importância de features
+|    ├── image/                                    # **Imagens e gráficos gerados**
+|    |   └── Global_bar_plot_shap_importance.png   # Gráfico de importância de features
 |    |
-|    ├── processed/                # **Dados processados**
-|    |   └── top_features.txt      # Lista das melhores features
+|    ├── processed/                                # **Dados processados**
+|    |   └── top_features.txt                      # Lista das melhores features
 |    |
-|    └── raw/                      # **Dados**
-|        ├── dados_brutos.csv      # Dados baixados do Yahoo Finance
-|        ├── treino.csv            # Conjunto de treino
-|        ├── teste.csv             # Conjunto de teste
-|        └── validacao.csv         # Conjunto de validação
+|    └── raw/                                      # **Dados**
+|        ├── dados_brutos.csv                      # Dados baixados do Yahoo Finance
+|        ├── treino.csv                            # Conjunto de treino
+|        ├── teste.csv                             # Conjunto de teste
+|        └── validacao.csv                         # Conjunto de validação
 |
-├── models/                        # **Modelo treinado**
+├── models/                                        # **Modelo treinado**
 |
-├── scripts/                       # **Scripts do projeto**
-|   ├── baktesting.py              # Script para backtesting
+├── scripts/                                       # **Scripts do projeto**
+|   ├── baktesting.py                              # Script para backtesting
 |   ├──
 |   ├──
 |   └──
 |
-├── .gitignore                     # Arquivos ignorados pelo git
-├── .python-version                # Versão do python no projeto
-├── pyproject.toml                 # Dependências do projeto (uv)
-├── README.md                      # Documentação
+├── .gitignore                                     # Arquivos ignorados pelo git
+├── .python-version                                # Versão do python no projeto
+├── pyproject.toml                                 # Dependências do projeto (uv)
+├── README.md                                      # Documentação
 ```
 
 ## ⚙️ Configuração
