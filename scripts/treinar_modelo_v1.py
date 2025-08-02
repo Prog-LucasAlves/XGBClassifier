@@ -19,7 +19,6 @@ from sklearn.metrics import (
     f1_score,
     precision_score,
     recall_score,
-    pr,
 )
 from sklearn.model_selection import RandomizedSearchCV, cross_val_score
 from sklearn.tree import DecisionTreeClassifier
@@ -168,7 +167,7 @@ def modelo_top_features(df_treino):
     Função com modelo usado para para selecionar as Top features.
     """
 
-    print("\n 🔍 Selecionando as Top Features...")
+    print("\n🔍 Selecionando as Top Features...")
     features = pegar_colunas(df_treino)
 
     SEED = 42
@@ -226,7 +225,7 @@ def selecionar_melhores_features(
     Função que seleciona as top features mais importantes.
     """
 
-    print("\n 🔍 Calculando valores SHAP...")
+    print("\n🔍 Calculando valores SHAP...")
     explainer = shap.TreeExplainer(modelo)
     shap_values = explainer.shap_values(X)
 
@@ -262,7 +261,7 @@ def tunar_modelo(X_train, y_train):
     Função que encontra os melhores parâmetros para o modelo.
     """
 
-    print("\n 🔍 Tunando modelo...")
+    print("\n🔍 Tunando modelo...")
     X = X_train
     y = y_train
 
