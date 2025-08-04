@@ -8,6 +8,7 @@ import optuna
 import pandas as pd
 import shap
 import yfinance as yf
+import ta
 from scipy.stats import randint, uniform
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
@@ -39,6 +40,7 @@ def apagar_arquivos_antigos():
         "../data/image/shap_importance.png",
         "../data/image/backtest_plot.png",
         "../data/image/confusionmatix.png",
+        "../data/image/Beeswarm_plot_shap_importance.png",
         "../data/image/Global_bar_plot_shap_importance.png",
         "../data/image/Local_bar_plot_shap_importance.png",
         "../models/modelo_xgb.pkl",
@@ -79,7 +81,7 @@ def preparar_dados(df):
     )  # Target: retorno futuro em 10 dias
     df["target"] = (df["future_return"] > 0).astype(int)  # Target: Binario
 
-    # Variáves
+    # Variáveis baseados no preço
     df["volatility"] = df["Close"].rolling(20).std()
     df["close_vs_high"] = df["Close"] / df["High"].rolling(20).max()
     df["close_vs_low"] = df["Close"] / df["Low"].rolling(20).min()
@@ -87,6 +89,37 @@ def preparar_dados(df):
     for col in ["volatility", "close_vs_high", "close_vs_low"]:
         for i in range(1, 21):
             df[f"{col}_lag{i}"] = df[col].shift(i)
+
+    # Variáveis de Indicadores Técnicos
+    df["RSI14"] = ta.momentum.rsi(df["Close"], window=14)
+    df["RSI14_lag1"] = df["RSI14"].shift(1)
+
+    indicator_atr14 = ta.volatility.AverageTrueRange(
+        high=df["High"],
+        low=df["Low"],
+        close=df["Close"],
+        window=14,
+    )
+
+    df["SMA20"] = ta.trend.sma_indicator(df["Close"], window=20)
+    df["SMA50"] = ta.trend.sma_indicator(df["Close"], window=50)
+    df["EMA20"] = ta.trend.ema_indicator(df["Close"], window=20)
+
+    df["ATR14"] = indicator_atr14.average_true_range()
+    df["ATR14_lag1"] = df["ATR14"].shift(1)
+    df["ATR14_lag2"] = df["ATR14"].shift(2)
+    df["ATR14_lag3"] = df["ATR14"].shift(3)
+    df["ATR14_lag4"] = df["ATR14"].shift(4)
+    df["ATR14_lag5"] = df["ATR14"].shift(5)
+    df["ATR14_lag6"] = df["ATR14"].shift(6)
+    df["ATR14_lag7"] = df["ATR14"].shift(7)
+    df["ATR14_lag8"] = df["ATR14"].shift(8)
+    df["ATR14_lag9"] = df["ATR14"].shift(9)
+    df["ATR14_lag10"] = df["ATR14"].shift(10)
+    df["ATR14_lag11"] = df["ATR14"].shift(11)
+    df["ATR14_lag12"] = df["ATR14"].shift(12)
+    df["ATR14_lag13"] = df["ATR14"].shift(13)
+    df["ATR14_lag14"] = df["ATR14"].shift(14)
 
     columns = df.columns.tolist()
     df.dropna(subset=columns, inplace=True)
@@ -97,6 +130,7 @@ def pegar_colunas(df):
     """
     Função que elimina as colunas que não serão utilizadas no modelo.
     """
+
     return df.columns.drop(
         [
             "Close",
@@ -115,8 +149,9 @@ def pegar_colunas(df):
 
 def separar_dados_temporais(df):
     """
-    Função que separa os dados temporais em treino, validação e teste.
+    Função que separa os dados temporais em treino, teste e validação.
     """
+
     df = df.copy()
     df.index = pd.to_datetime(df.index)
     TREINO = df[(df.index >= "2005-01-01") & (df.index < "2019-01-01")]
@@ -272,15 +307,52 @@ def selecionar_melhores_features(
         dpi=300,
     )
 
-    # Beeswarm plot
-    shap.plots.beeswarm(shap_values, max_display=top_n, show=False)
-    plt.title(f"Top {top_n} Features - SHAP Importance (Beeswarm)", pad=20)
+    # Configurações iniciais
+    top_n = top_n
+    plt.figure(figsize=(10, 6))  # Tamanho da figura
+
+    # Gerar o gráfico beeswarm
+    shap.plots.beeswarm(
+        shap_values,
+        max_display=top_n,  # Limita às top 5 features
+        show=False,
+        color=plt.get_cmap("coolwarm"),  # Gradiente azul (baixo) -> vermelho (alto)
+        alpha=0.7,  # Transparência para reduzir sobreposição de pontos
+    )
+
+    # Personalizar títulos e eixos
+    plt.title(f"Top {top_n} Features - SHAP Importance", fontsize=14, pad=20)
+    plt.xlabel("SHAP Value (Impact on Model Output)", fontsize=12)
+    plt.ylabel("Features", fontsize=12)
+
+    # Ajustar rótulos das features (remover caracteres inválidos)
+    ax = plt.gca()
+    labels = [
+        label.get_text()
+        .replace("_", " ")
+        .replace("@", "")
+        .replace("lag", "lag ")
+        .strip()
+        for label in ax.get_yticklabels()
+    ]
+    ax.set_yticklabels(labels, fontsize=12)
+
+    # Adicionar legenda de cores manualmente (se necessário)
+    import matplotlib.patches as mpatches
+
+    low_patch = mpatches.Patch(color="blue", label="Low Value")
+    high_patch = mpatches.Patch(color="red", label="High Value")
+    plt.legend(handles=[low_patch, high_patch], loc="upper right", fontsize=8)
+
+    # Ajustar layout e salvar
     plt.tight_layout()
     plt.savefig(
         os.path.join(salvar_grafico, "Beeswarm_plot_shap_importance.png"),
         bbox_inches="tight",
         dpi=300,
+        facecolor="white",
     )
+    plt.close()
 
     return top_features.index.tolist()
 
