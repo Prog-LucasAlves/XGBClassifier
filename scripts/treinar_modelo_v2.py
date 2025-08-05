@@ -24,6 +24,16 @@ from xgboost import XGBClassifier
 
 warnings.filterwarnings("ignore")
 
+"""
+XGB 2025 - v1.0
+
+Data da modificação:
+
+Modificações:
+    - v1.0 -> Definição target
+
+"""
+
 
 def apagar_arquivos_antigos():
     """
@@ -83,16 +93,13 @@ def preparar_dados(df):
 
     # Variáveis baseados no preço
     df["volatility"] = df["Close"].rolling(20).std()
-    df["close_vs_high"] = df["Close"] / df["High"].rolling(20).max()
-    df["close_vs_low"] = df["Close"] / df["Low"].rolling(20).min()
 
-    for col in ["volatility", "close_vs_high", "close_vs_low"]:
+    for col in ["volatility"]:
         for i in range(1, 21):
             df[f"{col}_lag{i}"] = df[col].shift(i)
-
+    """
     # Variáveis de Indicadores Técnicos
     df["RSI14"] = ta.momentum.rsi(df["Close"], window=14)
-    df["RSI14_lag1"] = df["RSI14"].shift(1)
 
     indicator_atr14 = ta.volatility.AverageTrueRange(
         high=df["High"],
@@ -101,28 +108,23 @@ def preparar_dados(df):
         window=14,
     )
 
-    df["SMA20"] = ta.trend.sma_indicator(df["Close"], window=20)
-    df["SMA50"] = ta.trend.sma_indicator(df["Close"], window=50)
-    df["EMA20"] = ta.trend.ema_indicator(df["Close"], window=20)
+    indicator_atr50 = ta.volatility.AverageTrueRange(
+        high=df["High"],
+        low=df["Low"],
+        close=df["Close"],
+        window=50,
+    )
 
     df["ATR14"] = indicator_atr14.average_true_range()
-    df["ATR14_lag1"] = df["ATR14"].shift(1)
-    df["ATR14_lag2"] = df["ATR14"].shift(2)
-    df["ATR14_lag3"] = df["ATR14"].shift(3)
-    df["ATR14_lag4"] = df["ATR14"].shift(4)
-    df["ATR14_lag5"] = df["ATR14"].shift(5)
-    df["ATR14_lag6"] = df["ATR14"].shift(6)
-    df["ATR14_lag7"] = df["ATR14"].shift(7)
-    df["ATR14_lag8"] = df["ATR14"].shift(8)
-    df["ATR14_lag9"] = df["ATR14"].shift(9)
-    df["ATR14_lag10"] = df["ATR14"].shift(10)
-    df["ATR14_lag11"] = df["ATR14"].shift(11)
-    df["ATR14_lag12"] = df["ATR14"].shift(12)
-    df["ATR14_lag13"] = df["ATR14"].shift(13)
-    df["ATR14_lag14"] = df["ATR14"].shift(14)
+    df["ATR50"] = indicator_atr50.average_true_range()
+    df['REASON_ATR'] = df['ATR14'] / df['ATR50']
+    df['Z-Score_ATR14'] = (df['ATR14'] - df['ATR14'].mean()) / df['ATR14'].std()
+    df['Z-Score_ATR50'] = (df['ATR50'] - df['ATR50'].mean()) / df['ATR50'].std()
+    """
 
     columns = df.columns.tolist()
-    df.dropna(subset=columns, inplace=True)
+    df.dropna(subset=columns, inplace=True)  #
+    df = df.replace([np.inf, -np.inf], np.nan).dropna()  #
     return df
 
 
@@ -141,8 +143,6 @@ def pegar_colunas(df):
             "future_return",
             "target",
             "volatility",
-            "close_vs_high",
-            "close_vs_low",
         ]
     ).tolist()
 
@@ -162,7 +162,7 @@ def separar_dados_temporais(df):
 
 def carregar_ou_baixar_dados_divididos(ticker, anos=20):
     """
-    Função que carrega os dados brutos ou os separa em treino, validação e teste.
+    Função que carrega os dados brutos e os separa em treino, teste e validação.
     """
 
     caminho_dados_brutos = "../data/raw/dados_brutos.csv"
@@ -203,6 +203,9 @@ def carregar_ou_baixar_dados_divididos(ticker, anos=20):
 def modelo_top_features(df_treino):
     """
     Função com modelo usado para para selecionar as Top features.
+    Utiliza RandomizedSearchCV para encontrar os melhores parâmetros do modelo XGBClassifier.
+
+    df_treino: Dataframe de treino
     """
 
     print("\n🔍 Selecionando as Top Features...")
@@ -261,6 +264,7 @@ def selecionar_melhores_features(
 ):
     """
     Função que seleciona as top features mais importantes.
+    Utiliza SHAP para calcular a importância das features.
     """
 
     print("\n🔍 Calculando valores SHAP...")
@@ -296,16 +300,7 @@ def selecionar_melhores_features(
         bbox_inches="tight",
         dpi=300,
     )
-
-    # Local Bar plot
-    shap.plots.bar(shap_values[0], max_display=top_n, show=False)
-    plt.title(f"Top {top_n} Features - SHAP Importance (Local)", pad=20)
-    plt.tight_layout()
-    plt.savefig(
-        os.path.join(salvar_grafico, "Local_bar_plot_shap_importance.png"),
-        bbox_inches="tight",
-        dpi=300,
-    )
+    plt.close()
 
     # Configurações iniciais
     top_n = top_n
@@ -314,7 +309,7 @@ def selecionar_melhores_features(
     # Gerar o gráfico beeswarm
     shap.plots.beeswarm(
         shap_values,
-        max_display=top_n,  # Limita às top 5 features
+        max_display=top_n,
         show=False,
         color=plt.get_cmap("coolwarm"),  # Gradiente azul (baixo) -> vermelho (alto)
         alpha=0.7,  # Transparência para reduzir sobreposição de pontos
@@ -360,6 +355,12 @@ def selecionar_melhores_features(
 def tunar_modelo(X_train, y_train):
     """
     Função que encontra os melhores parâmetros para o modelo.
+    Utiliza Optuna para otimização de hiperparâmetros.
+    A função treina um modelo XGBClassifier com os melhores parâmetros encontrados.
+    Retorna o modelo treinado.
+
+    X_train: DataFrame com as features de treino.
+    y_train: Series com os rótulos de treino.
     """
 
     print("\n🔍 Tunando modelo...")
@@ -446,6 +447,8 @@ def treinar_e_salvar_modelo(
 ):
     """
     Função que treina o modelo e salva o modelo e as features selecionadas.
+    Recebe os DataFrames de treino e teste.
+    Salva o modelo treinado e as top features em arquivos especificados.
     """
 
     # Pega todas as features originais
@@ -460,7 +463,7 @@ def treinar_e_salvar_modelo(
 
     # Gera SHAP e seleciona top features
     top_features = selecionar_melhores_features(
-        modelo_features, X_train, top_n=80, salvar_em=top_features_path
+        modelo_features, X_train, top_n=50, salvar_em=top_features_path
     )
 
     # Exclui algumas features baseado nos falsos positivos e verdadeiros positivos
@@ -527,6 +530,10 @@ def treinar_e_salvar_modelo(
 
 
 def main():
+    """
+    Função principal que executa o fluxo de trabalho do script.
+    """
+
     apagar_arquivos_antigos()
     print("🗑️ Arquivos antigos removidos.\n")
     ticker = "PETR4.SA"
