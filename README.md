@@ -82,8 +82,8 @@ uv pip install pyproject.toml
 |
 ├── scripts/                                       # **Scripts do projeto**
 |   ├── baktesting.py                              # Script para backtesting
-|   ├──
-|   ├──
+|   ├── treinar_modelo_v1.py                       # Versão 1 do modelo
+|   ├── treinar_modelo_v2.py                       # Versão 2 do modelo
 |   └──
 |
 ├── .gitignore                                     # Arquivos ignorados pelo git
@@ -102,6 +102,10 @@ ticker = "PETR4.SA"  # Para outro ticker do Yahoo Finance
 ```
 
 ## 📊 Métricas de Performance
+
+- Acurácia nos dados de teste.
+- Matriz de confusão.
+- Gráfico SHAP de importância das features.
 
 ## 🤝 Contribuição
 
